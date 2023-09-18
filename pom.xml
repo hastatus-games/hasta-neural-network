@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>br.com.hastatus.neuralnetwork</groupId>
-    <artifactId>java_neural_network</artifactId>
+    <artifactId>hasta_neural_network</artifactId>
     <version>0.1.1</version>
     <developers>
         <developer>
