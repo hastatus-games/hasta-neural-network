@@ -63,6 +63,16 @@ public class NeuralNetworkBasicSigmoid implements NeuralNetwork {
     }
 
 
+    /**
+     * Trains the neural network using the backpropagation algorithm.
+     *
+     * This method iteratively adjusts the weights and biases of the neurons in the network based on the provided training inputs and expected outputs. The goal is to minimize the error between the actual output of the network and the expected outputs.
+     *
+     * @param trainingInputs A 2D array where each row represents a set of inputs to the network.
+     * @param expectedOutputs A 2D array where each row represents the expected outputs of the network for the corresponding inputs in the trainingInputs array.
+     * @param numEpochs The number of iterations over the entire training dataset to perform. More epochs can allow for more fine-tuned adjustments, but also increases the risk of overfitting.
+     * @param learningRate The step size to use when adjusting weights and biases. Smaller values can lead to more precise adjustments but may require more epochs to converge to a solution.
+     */
     @Override
     public void train(double[][] trainingInputs, double[][] expectedOutputs, int numEpochs, double learningRate) {
 
@@ -139,7 +149,7 @@ public class NeuralNetworkBasicSigmoid implements NeuralNetwork {
 
             double[] inputsDaCamada;
             if(j == 0) {
-                inputsDaCamada = trainingDeltas.getEntrada();
+                inputsDaCamada = trainingDeltas.getInputs();
             } else {
                 inputsDaCamada = layers[j-1].getLastInputs();
             }

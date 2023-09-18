@@ -1,21 +1,23 @@
 package br.com.hastatus.neuralnetwork.network;
 
+
+/**
+ * This class is used to store intermediary values during training that will be used to adjust weights and bias
+ */
 public class TrainingDeltas {
 
-    double[] entrada;
+    double[] inputs;
 
     double[][] deltas;
 
 
-    public TrainingDeltas(double[] entrada, int totalLayers) {
-        this.entrada = entrada;
+    public TrainingDeltas(double[] inputs, int totalLayers) {
+        this.inputs = inputs;
         deltas = new double[totalLayers][];
 
     }
 
     public void initDeltaLayer(int layerIndex, int outputSize){
-        // Calculate deltas for the output layer
-        int lastLayerIndex = deltas.length - 1;
         deltas[layerIndex] = new double[outputSize];
 
     }
@@ -28,7 +30,7 @@ public class TrainingDeltas {
         return deltas[layerIndex][neuronIndex];
     }
 
-    public double[] getEntrada() {
-        return entrada;
+    public double[] getInputs() {
+        return inputs;
     }
 }
