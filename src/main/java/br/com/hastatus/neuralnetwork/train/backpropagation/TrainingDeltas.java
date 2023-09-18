@@ -1,4 +1,4 @@
-package br.com.hastatus.neuralnetwork.network;
+package br.com.hastatus.neuralnetwork.train.backpropagation;
 
 
 /**
@@ -9,6 +9,7 @@ public class TrainingDeltas {
     double[] inputs;
 
     double[][] deltas;
+
 
 
     public TrainingDeltas(double[] inputs, int totalLayers) {
@@ -25,6 +26,7 @@ public class TrainingDeltas {
     public void addDelta(int layerIndex, int neuronIndex, double value) {
         deltas[layerIndex][neuronIndex] = value;
     }
+
 
     public double getDelta(int layerIndex, int neuronIndex) {
         return deltas[layerIndex][neuronIndex];
