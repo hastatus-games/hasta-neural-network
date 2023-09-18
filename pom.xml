@@ -6,7 +6,13 @@
 
     <groupId>br.com.hastatus.neuralnetwork</groupId>
     <artifactId>java_neural_network</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
+    <developers>
+        <developer>
+            <id>luc4smoreira</id>
+            <name>Lucas Moreira Carneiro de Miranda ( hastatus.com.br )</name>
+        </developer>
+    </developers>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
