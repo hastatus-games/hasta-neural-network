@@ -7,10 +7,22 @@
     <groupId>br.com.hastatus.neuralnetwork</groupId>
     <artifactId>hasta_neural_network</artifactId>
     <version>0.1.1</version>
+    <name>Hasta Neural Network</name>
+    <description>A neural network library developed by Hastatus</description>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+        </license>
+    </licenses>
+
+    
     <developers>
         <developer>
             <id>luc4smoreira</id>
-            <name>Lucas Moreira Carneiro de Miranda ( hastatus.com.br )</name>
+            <name>Lucas Moreira Carneiro de Miranda</name>
+            <url>http://www.hastatus.com.br</url>
         </developer>
     </developers>
 
