@@ -19,6 +19,11 @@ public class NeuronSigmoid extends Neuron {
 
     @Override
     public double deriveActivationFunction(double value){
-        return value * (1 - value); // Sigmoid derivative
+        return deriveSigmoid(value); // Sigmoid derivative
+    }
+
+
+    public static double deriveSigmoid(double value){
+        return value * (1 - value);
     }
 }
