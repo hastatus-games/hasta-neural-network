@@ -6,7 +6,7 @@
 
     <groupId>br.com.hastatus.neuralnetwork</groupId>
     <artifactId>java_neural_network</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
     <developers>
         <developer>
             <id>luc4smoreira</id>
