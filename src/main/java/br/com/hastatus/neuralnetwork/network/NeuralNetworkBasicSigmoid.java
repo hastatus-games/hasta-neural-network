@@ -4,11 +4,12 @@ import br.com.hastatus.neuralnetwork.base.Neuron;
 import br.com.hastatus.neuralnetwork.base.NeuronSigmoid;
 import br.com.hastatus.neuralnetwork.layer.NeuralLayer;
 import br.com.hastatus.neuralnetwork.layer.NeuralLayerSigmoid;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 public class NeuralNetworkBasicSigmoid implements NeuralNetwork {
-
+    private static final Logger logger = LogManager.getLogger(NeuralNetworkBasicSigmoid.class);
     private final NeuralLayer[] layers;
 
     public NeuralNetworkBasicSigmoid(int inputSize, int[] hiddenSizes, int outputSize) {
@@ -43,11 +44,12 @@ public class NeuralNetworkBasicSigmoid implements NeuralNetwork {
 
 
 
-//        System.out.println("Total layers:" + layers.length);
-//
-//        for(int i = 0; i< layers.length; i++) {
-//            System.out.println("Layer "+i+": neurons:" + layers[i].getTotalNeurons());
-//        }
+        logger.info("Total layers: {}", layers.length);
+
+
+        for(int i = 0; i< layers.length; i++) {
+            logger.info("Layer {} neurons: {}", i, layers[i].getTotalNeurons());
+        }
     }
 
 
@@ -65,7 +67,6 @@ public class NeuralNetworkBasicSigmoid implements NeuralNetwork {
 
     /**
      * Trains the neural network using the backpropagation algorithm.
-     *
      * This method iteratively adjusts the weights and biases of the neurons in the network based on the provided training inputs and expected outputs. The goal is to minimize the error between the actual output of the network and the expected outputs.
      *
      * @param trainingInputs A 2D array where each row represents a set of inputs to the network.
@@ -76,11 +77,10 @@ public class NeuralNetworkBasicSigmoid implements NeuralNetwork {
     @Override
     public void train(double[][] trainingInputs, double[][] expectedOutputs, int numEpochs, double learningRate) {
 
-        if(trainingInputs.length!=trainingInputs.length) {
-            throw new RuntimeException("It is necessary to inform the expected values for training for all outputs");
-        }
 
         for (int epoch = 0; epoch < numEpochs; epoch++) {
+
+            logger.debug(" *** Training Epoch: {} / {}", epoch, numEpochs-1);
 
             for (int i = 0; i < trainingInputs.length; i++) {
                 // Forward pass
@@ -113,8 +113,8 @@ public class NeuralNetworkBasicSigmoid implements NeuralNetwork {
             double delta = error * NeuronSigmoid.deriveSigmoid(outputs[j]);
 
             trainingDeltas.addDelta(layers.length-1, j, delta);
+            logger.debug("Output[{}/{}]: {} expected:{} error:{} trainingDelta:{}", j, outputs.length-1, outputs[j], expected[j], error, delta);
 
-            System.out.println("Output:"+outputs[j]+" expected:"+expected[j]+" error:"+error+" trainingDelta:"+delta);
         }
 
         // Calculate deltas for the hidden layers
@@ -147,11 +147,11 @@ public class NeuralNetworkBasicSigmoid implements NeuralNetwork {
     private void adjustWeightsAndBias(TrainingDeltas trainingDeltas, double learningRate) {
         for (int j = 0; j < layers.length; j++) {
 
-            double[] inputsDaCamada;
+            double[] inputsFromLayer;
             if(j == 0) {
-                inputsDaCamada = trainingDeltas.getInputs();
+                inputsFromLayer = trainingDeltas.getInputs();
             } else {
-                inputsDaCamada = layers[j-1].getLastInputs();
+                inputsFromLayer = layers[j-1].getLastInputs();
             }
 
 
@@ -160,8 +160,8 @@ public class NeuralNetworkBasicSigmoid implements NeuralNetwork {
 
                 neuron.adjustBias(trainingDeltas.getDelta(j, i) * learningRate);
 
-                for (int l = 0; l < inputsDaCamada.length; l++) {
-                    neuron.adjustWeight(l, trainingDeltas.getDelta(j, i) * inputsDaCamada[l] * learningRate);
+                for (int l = 0; l < inputsFromLayer.length; l++) {
+                    neuron.adjustWeight(l, trainingDeltas.getDelta(j, i) * inputsFromLayer[l] * learningRate);
                 }
 
             }
