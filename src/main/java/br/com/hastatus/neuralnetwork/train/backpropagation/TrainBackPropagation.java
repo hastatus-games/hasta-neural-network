@@ -5,6 +5,7 @@ import br.com.hastatus.neuralnetwork.base.NeuronSigmoid;
 import br.com.hastatus.neuralnetwork.layer.NeuralLayer;
 import br.com.hastatus.neuralnetwork.network.NeuralNetwork;
 import br.com.hastatus.neuralnetwork.train.NeuralNetworkTrain;
+import br.com.hastatus.neuralnetwork.train.TrainStopCondition;
 import br.com.hastatus.neuralnetwork.train.TrainingDeltas;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,17 +22,18 @@ public class TrainBackPropagation implements NeuralNetworkTrain  {
     }
 
     /**
-     * Trains the neural network using the backpropagation algorithm.
-     * This method iteratively adjusts the weights and biases of the neurons in the network based on the provided training inputs and expected outputs. The goal is to minimize the error between the actual output of the network and the expected outputs.
+     * Performs the training of the neural network using the backpropagation algorithm. The training is carried out
+     * iteratively through epochs until a stopping condition, specified by {@link TrainStopCondition}, is met.
      *
      * @param trainingInputs A 2D array where each row represents a set of inputs to the network.
-     * @param expectedOutputs A 2D array where each row represents the expected outputs of the network for the corresponding inputs in the trainingInputs array.
-     * @param totalEpochs The number of iterations over the entire training dataset to perform. More epochs can allow for more fine-tuned adjustments, but also increases the risk of overfitting.
-     * @param learningRate The step size to use when adjusting weights and biases. Smaller values can lead to more precise adjustments but may require more epochs to converge to a solution.
+     * @param expectedOutputs A 2D array where each row represents the set of expected outputs from the network for the corresponding set of inputs.
+     * @param trainStopCondition An object encapsulating the conditions under which the training should be halted. This includes criteria such as a maximum number of epochs, a defined learning rate, an indication of whether to stop in case of divergence, and an acceptable mean square error threshold.
      */
-    public void train(double[][] trainingInputs, double[][] expectedOutputs, int totalEpochs, double learningRate, double meanSquareErrorsAcceptable) {
+    public void train(double[][] trainingInputs, double[][] expectedOutputs, TrainStopCondition trainStopCondition) {
 
         trainConvergencyTracker = new TrainConvergencyTracker();
+
+        int totalEpochs = trainStopCondition.getMaxEpochs();
 
         for (int epoch = 0; epoch < totalEpochs; epoch++) {
 
@@ -46,7 +48,7 @@ public class TrainBackPropagation implements NeuralNetworkTrain  {
                 double[] expectedOutput = expectedOutputs[i];
 
                 TrainingDeltas trainingDeltas = getTrainingDeltas(trainingInputs[i], output, expectedOutput);
-                adjustWeightsAndBias(trainingDeltas, learningRate);
+                adjustWeightsAndBias(trainingDeltas, trainStopCondition.getLearningRate());
             }
 
             trainConvergencyTracker.calculateAndSaveMeanSquareError(trainingInputs.length, expectedOutputs[0].length);
@@ -56,12 +58,17 @@ public class TrainBackPropagation implements NeuralNetworkTrain  {
                 double previousMSE = trainConvergencyTracker.getMeanSquareErrorByEpoch(epoch-1);
                 double evolution = previousMSE - currentMSE;
 
-                if(currentMSE < meanSquareErrorsAcceptable) {
+                if(currentMSE <= trainStopCondition.getMeanSquareErrorGood()) {
                     logger.info("EPOCH[{}/{}] MeanSquareErrorAcceptable: {}", epoch, totalEpochs, currentMSE);
                     break;
                 }
-                else if(evolution < 0) {
+
+                if(evolution < 0) {
                     logger.warn("EPOCH[{}/{}] Training not converging: {}", epoch, totalEpochs, evolution);
+
+                    if(trainStopCondition.isStopOnDiverge()) {
+                        break;
+                    }
                     break;
                 }
                 else {

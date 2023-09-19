@@ -1,12 +1,14 @@
 package br.com.hastatus.neuralnetwork.network;
 
+import br.com.hastatus.neuralnetwork.train.TrainStopCondition;
 import br.com.hastatus.neuralnetwork.train.backpropagation.TrainBackPropagation;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class NeuralNetworkBasicSigmoidTest {
 
     @Test
-    public void calculatorTest() {
+    public void identityFunctionTest() {
 
         int inputSize = 1;
         int[] hiddenSizes = {10};
@@ -19,23 +21,25 @@ public class NeuralNetworkBasicSigmoidTest {
 
         TrainBackPropagation trainBackPropagation = new TrainBackPropagation(neuralNetwork);
 
-        trainBackPropagation.train(sampleInput, expectedOutput, 10000, 0.01, 0.001);
+        TrainStopCondition trainStopCondition = new TrainStopCondition(10000, 0.1, true, 0.0012);
+        trainBackPropagation.train(sampleInput, expectedOutput, trainStopCondition);
 
+        final double tolerance = 0.08;
 
-        System.out.println(" -------  end ------ \n\n");
 
         double[] inputs1 = {0.1};
         double[] outputs1 = neuralNetwork.feedForward(inputs1);
-        System.out.println("Output for 0.1: " + outputs1[0]);
+        Assertions.assertEquals(0.1, outputs1[0], tolerance);
+
 
         double[] inputs2 = {0.5};
         double[] outputs2 = neuralNetwork.feedForward(inputs2);
-        System.out.println("Output for 0.5: " + outputs2[0]);
+        Assertions.assertEquals(0.5, outputs2[0], tolerance);
 
 
         double[] inputs3 = {1};
         double[] outputs3 = neuralNetwork.feedForward(inputs3);
-        System.out.println("Output for 1: " + outputs3[0]);
+        Assertions.assertEquals(1, outputs3[0], tolerance);
     }
 
 
