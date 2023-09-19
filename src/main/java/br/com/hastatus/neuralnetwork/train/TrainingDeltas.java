@@ -1,4 +1,4 @@
-package br.com.hastatus.neuralnetwork.train.backpropagation;
+package br.com.hastatus.neuralnetwork.train;
 
 
 /**
