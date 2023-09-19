@@ -5,11 +5,17 @@ import br.com.hastatus.neuralnetwork.layer.NeuralLayerSigmoid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class NeuralNetworkBasicSigmoid implements NeuralNetwork {
     private static final Logger logger = LogManager.getLogger(NeuralNetworkBasicSigmoid.class);
-    private final NeuralLayer[] layers;
+
+    private final List<NeuralLayer> layers;
     final private int totalLayers;
+
+
 
     public NeuralNetworkBasicSigmoid(int inputSize, int[] hiddenSizes, int outputSize) {
         if(inputSize < 1 || outputSize < 1 || hiddenSizes.length < 1) {
@@ -18,7 +24,8 @@ public class NeuralNetworkBasicSigmoid implements NeuralNetwork {
 
         this.totalLayers = hiddenSizes.length + 1;//including the last output layer
 
-        this.layers = new NeuralLayer[totalLayers];
+        this.layers = new ArrayList<>();
+
 
         for (int i = 0; i < hiddenSizes.length; i++) {
 
@@ -34,20 +41,23 @@ public class NeuralNetworkBasicSigmoid implements NeuralNetwork {
             //the neurons value definied in the previous layer
             int neuroniosDaCamada = hiddenSizes[i];
 
-            this.layers[i] = new NeuralLayerSigmoid(neuroniosDaCamada, numInputs);
+            this.layers.add(new NeuralLayerSigmoid(neuroniosDaCamada, numInputs));
+
         }
 
         //the last layer is always the output
-        this.layers[this.layers.length - 1] = new NeuralLayerSigmoid(outputSize, hiddenSizes[hiddenSizes.length - 1]);
+        this.layers.add(new NeuralLayerSigmoid(outputSize, hiddenSizes[hiddenSizes.length - 1]));
 
 
 
 
-        logger.info("Total layers: {}", layers.length);
-        for(int i = 0; i< layers.length; i++) {
-            logger.info("Layer {} neurons: {}", i, layers[i].getTotalNeurons());
+        logger.info("Total layers: {}", layers.size());
+        for(int i = 0; i< layers.size(); i++) {
+            logger.info("Layer {} neurons: {}", i, layers.get(i).getTotalNeurons());
         }
     }
+
+
 
 
     public double[] feedForward(double[] inputs) {
@@ -69,6 +79,6 @@ public class NeuralNetworkBasicSigmoid implements NeuralNetwork {
 
     @Override
     public NeuralLayer getLayer(int index) {
-        return layers[index];
+        return layers.get(index);
     }
 }
