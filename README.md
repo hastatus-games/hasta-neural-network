@@ -1,5 +1,5 @@
-# Hasta Neural Network
-A neural network library for machine learning.
+# Hasta Neural Network 
+A neural network library for machine learning. [*]
 
 ![logo](https://github.com/luc4smoreira/java_neural_network/assets/9322152/cb545120-c461-48b7-98a3-f0d08d116660)
 
